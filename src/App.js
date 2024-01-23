@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { Button } from '@mui/material';
 
 import TranscriptionEditor from './components/TranscriptionEditor';
 import ExportFormatSelect from './components/SelectExportFormat';
@@ -225,14 +226,14 @@ const App = () => {
   const headerControls = (
     <div>
       <section>
-        <button onClick={loadDemo}>
+        <Button onClick={loadDemo}>
           Load Demo
-        </button>
+        </Button>
       </section>
 
       <section>
         <label>Load Media</label>
-        <button onClick={handleLoadMediaUrl}> From URL</button>
+        <Button onClick={handleLoadMediaUrl}> From URL</Button>
         <input
           type={"file"}
           id={"mediaFile"}
@@ -272,7 +273,7 @@ const App = () => {
           value={videoConfig.exportFormat}
           handleChange={handleExportFormatChange}
         />
-        <button onClick={exportTranscript}>Export File</button>
+        <Button onClick={exportTranscript}>Export File</Button>
       </section>
 
       <section>
@@ -314,9 +315,9 @@ const App = () => {
           />
         </div>
 
-        <button onClick={() => clearLocalStorage()}>
+        <Button onClick={() => clearLocalStorage()}>
           Clear Local Storage
-        </button>
+        </Button>
       </section>
     </div>
   )
