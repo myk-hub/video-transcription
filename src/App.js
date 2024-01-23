@@ -1,11 +1,28 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Button } from '@mui/material';
+import { Box, Button, Grid, Typography, InputLabel } from '@mui/material';
+import { styled } from '@mui/material/styles'
+import Checkbox from '@mui/material/Checkbox';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import TranscriptionEditor from './components/TranscriptionEditor';
 import ExportFormatSelect from './components/SelectExportFormat';
 import SttTypeSelect from './components/SelectSstJsonType';
 import transcriptDataJson from "./sample-data/transcriptData.json";
 import { localSave, loadLocalSavedData, isVideoInLocalStorage } from "./localStorage";
+
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
+
 
 const App = () => {
   const transcriptEditorRef = useRef(null);
@@ -113,6 +130,7 @@ const App = () => {
 
   const handleIsTextEditable = e => {
     setVideoConfig({
+      ...videoConfig,
       isTextEditable: e.target.checked
     });
   };
@@ -192,6 +210,91 @@ const App = () => {
     localSave(videoConfig.mediaUrl, videoConfig.fileName, data);
   };
 
+
+  const headerControls = (
+    <Grid container spacing={10}>
+      <Grid item xs={2}>
+        <Button variant="outlined" onClick={loadDemo}>
+          Load Demo
+        </Button>
+      </Grid>
+
+      <Grid item xs={2}>
+        <InputLabel>Load Media{' '}</InputLabel>
+        <Button variant="outlined" onClick={handleLoadMediaUrl}>From URL</Button>
+        <br></br>
+        <InputLabel htmlFor="mediaFile">Select From Computer</InputLabel>
+        <Button
+          type={"file"}
+          id={"mediaFile"}
+          onChange={(e) => handleLoadMedia(e.target.files)}
+          component="label" variant="contained" startIcon={<CloudUploadIcon />}
+        >
+          Upload file
+          <VisuallyHiddenInput type="file" />
+        </Button>
+        {videoConfig.fileName !== "" ? (
+          <InputLabel>
+            {videoConfig.fileName}
+          </InputLabel>
+        ) : null}
+      </Grid>
+
+      <Grid item xs={2}>
+        <InputLabel>Load Transcript{' '}</InputLabel>
+        <SttTypeSelect
+          name={"sttType"}
+          value={videoConfig.sttType}
+          handleChange={handleSttTypeChange}
+        />
+        <InputLabel htmlFor="transcriptFile">From Computer</InputLabel>
+        <Button
+          type={"file"}
+          id={"transcriptFile"}
+          onChange={e => handleLoadTranscriptJson(e.target.files)}
+          component="label" variant="contained" startIcon={<CloudUploadIcon />}
+        >
+          Upload file
+          <VisuallyHiddenInput type="file" />
+        </Button>
+      </Grid>
+
+      <Grid item xs={2}>
+        <InputLabel>Export Transcript</InputLabel>
+        <ExportFormatSelect
+          name={"exportFormat"}
+          value={videoConfig.exportFormat}
+          handleChange={handleExportFormatChange}
+        />
+        <Button variant="outlined" onClick={exportTranscript}>Export File</Button>
+      </Grid>
+
+      <Grid item xs={2}>
+        <div>
+          <InputLabel htmlFor={"textIsEditableCheckbox"}>
+            Text Is Editable
+            <Checkbox
+              id={"textIsEditableCheckbox"}
+              type="checkbox"
+              checked={videoConfig.isTextEditable}
+              onChange={handleIsTextEditable}
+            />
+          </InputLabel>
+
+        </div>
+
+        <div>
+          <InputLabel htmlFor={"spellCheckCheckbox"}>
+            Spell Check <Checkbox id={"spellCheckCheckbox"} type="checkbox" onChange={handleSpellCheck} checked={videoConfig.spellCheck} />
+          </InputLabel>
+        </div>
+        <Button variant="outlined" onClick={() => clearLocalStorage()}>
+          Clear Local Storage
+        </Button>
+      </Grid>
+    </Grid>
+  )
+
   const analytics = (
     <>
       <section style={{ height: "250px", width: "50%", float: "left" }}>
@@ -221,112 +324,12 @@ const App = () => {
         />
       </section>
     </>
-  )
-
-  const headerControls = (
-    <div>
-      <section>
-        <Button onClick={loadDemo}>
-          Load Demo
-        </Button>
-      </section>
-
-      <section>
-        <label>Load Media</label>
-        <Button onClick={handleLoadMediaUrl}> From URL</Button>
-        <input
-          type={"file"}
-          id={"mediaFile"}
-          onChange={(e) => handleLoadMedia(e.target.files)}
-        />
-        <label htmlFor="mediaFile">From Computer</label>
-        {videoConfig.fileName !== "" ? (
-          <label>
-            {videoConfig.fileName}
-          </label>
-        ) : null}
-      </section>
-
-      <section>
-        <label>Load Transcript</label>
-        <SttTypeSelect
-          name={"sttType"}
-          value={videoConfig.sttType}
-          handleChange={handleSttTypeChange}
-        />
-
-        <input
-          type={"file"}
-          id={"transcriptFile"}
-          onChange={e => handleLoadTranscriptJson(e.target.files)}
-        />
-        <label htmlFor="transcriptFile">From Computer</label>
-        {videoConfig.transcriptData !== null ? (
-          <label>Transcript loaded.</label>
-        ) : null}
-      </section>
-
-      <section>
-        <label>Export Transcript</label>
-        <ExportFormatSelect
-          name={"exportFormat"}
-          value={videoConfig.exportFormat}
-          handleChange={handleExportFormatChange}
-        />
-        <Button onClick={exportTranscript}>Export File</Button>
-      </section>
-
-      <section>
-        <label>
-          Transcript Title
-          <span>(Optional)</span>
-        </label>
-        <input
-          type="text"
-          value={videoConfig.title}
-          onChange={e => handleChangeTranscriptTitle(e.target.value)}
-        />
-      </section>
-
-      <section>
-        <label>Options</label>
-
-        <div>
-          <label htmlFor={"textIsEditableCheckbox"}>
-            Text Is Editable
-          </label>
-          <input
-            id={"textIsEditableCheckbox"}
-            type="checkbox"
-            checked={videoConfig.isTextEditable}
-            onChange={handleIsTextEditable}
-          />
-        </div>
-
-        <div>
-          <label htmlFor={"spellCheckCheckbox"}>
-            Spell Check
-          </label>
-          <input
-            id={"spellCheckCheckbox"}
-            type="checkbox"
-            checked={videoConfig.spellCheck}
-            onChange={handleSpellCheck}
-          />
-        </div>
-
-        <Button onClick={() => clearLocalStorage()}>
-          Clear Local Storage
-        </Button>
-      </section>
-    </div>
-  )
+  );
 
   return (
-    <div>
-     <span>React Transcript Editor Demo </span>
-      {headerControls}
-
+    <Box>
+      <Typography variant="h5" gutterBottom>React Transcript Editor Demo</Typography>
+      {headerControls}<br></br>
       <TranscriptionEditor
         transcriptData={videoConfig.transcriptData}
         fileName={videoConfig.fileName}
@@ -341,9 +344,8 @@ const App = () => {
         autoSaveContentType={videoConfig.autoSaveContentType}
         mediaType='video'
       />
-
       {analytics}
-    </div>
+    </Box>
   );
 };
 
