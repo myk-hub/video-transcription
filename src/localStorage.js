@@ -1,3 +1,15 @@
+export const localSave = (mediaUrl, fileName, data) => {
+  let mediaUrlName = mediaUrl;
+  // if using local media instead of using random blob name
+  // that makes it impossible to retrieve from on page refresh
+  // use file name
+  if (mediaUrlName.includes('blob')) {
+    mediaUrlName = fileName;
+  }
+
+  localStorage.setItem(`draftJs-${ mediaUrlName }`, JSON.stringify(data));
+};
+
 export const loadLocalSavedData = (mediaUrl, fileName) => {
   let mediaUrlName = mediaUrl;
   if (mediaUrl.includes('blob')) {
@@ -7,7 +19,7 @@ export const loadLocalSavedData = (mediaUrl, fileName) => {
   return data;
 };
 
-export const isPresentInLocalStorage = (mediaUrl, fileName) => {
+export const isVideoInLocalStorage = (mediaUrl, fileName) => {
   if (mediaUrl !== null) {
     let mediaUrlName = mediaUrl;
     if (mediaUrl.includes('blob')) {

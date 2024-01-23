@@ -1,4 +1,3 @@
-// src/components/TranscriptionEditor.js
 import React from 'react';
 import { TranscriptEditor } from 'react-transcript-editor';
 
