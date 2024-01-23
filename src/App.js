@@ -59,32 +59,32 @@ const App = () => {
         autoSaveContentType={videoConfig.autoSaveContentType}
         mediaType={ 'video' }
       />
-          <section style={{ height: "250px", width: "50%", float: "left" }}>
-          <h3>Components Analytics</h3>
-          <textarea
-            style={{ height: "100%", width: "100%" }}
-            value={JSON.stringify(videoConfig.analyticsEvents, null, 2)}
-            disabled
-          />
-        </section>
+      <section>
+        <h3>Components Analytics</h3>
+        <textarea
+          style={{ height: "100%", width: "100%" }}
+          value={JSON.stringify(videoConfig.analyticsEvents, null, 2)}
+          disabled
+        />
+      </section>
 
-        <section style={{ height: "250px", width: "50%", float: "right" }}>
-          <h3>
-            Auto Save data:{" "}
-            <code>
-              {videoConfig.autoSaveContentType}| {videoConfig.autoSaveExtension}
-            </code>
-          </h3>
-          <textarea
-            style={{ height: "100%", width: "100%" }}
-            value={
-              videoConfig.autoSaveExtension === "json"
-                ? JSON.stringify(videoConfig.autoSaveData, null, 2)
-                : videoConfig.autoSaveData
-            }
-            disabled
-          />
-        </section>
+      <section>
+        <h3>
+          Auto Save data:{" "}
+          <code>
+            {videoConfig.autoSaveContentType}| {videoConfig.autoSaveExtension}
+          </code>
+        </h3>
+        <textarea
+          style={{ height: "100%", width: "100%" }}
+          value={
+            videoConfig.autoSaveExtension === "json"
+              ? JSON.stringify(videoConfig.autoSaveData, null, 2)
+              : videoConfig.autoSaveData
+          }
+          disabled
+        />
+      </section>
     </div>
   );
 };
