@@ -1,25 +1,92 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
 
-function App() {
+import TranscriptionEditor from './components/TranscriptionEditor';
+import transcriptDataJson from "./sample-data/transcriptData.json";
+import { loadLocalSavedData, isPresentInLocalStorage } from "./localStorage";
+
+
+const App = () => {
+  const [videoConfig, setVideoConfig] = useState({
+    transcriptData: null,
+    mediaUrl: null,
+    isTextEditable: true,
+    spellCheck: false,
+    sttType: "bbckaldi",
+    analyticsEvents: [],
+    title: "",
+    fileName: "",
+    autoSaveData: {},
+    autoSaveContentType: "draftjs",
+    autoSaveExtension: "json",
+  });
+ 
+  const videoUrl = "https://download.ted.com/talks/KateDarling_2018S-950k.mp4";
+  const title = "TED Talk | Kate Darling - Why we have an emotional connection to robots";
+  
+  useEffect(() => {
+    if(isPresentInLocalStorage(videoUrl)) {
+      const transcriptDataFromLocalStorage = loadLocalSavedData(videoUrl)
+      setVideoConfig({
+        transcriptData: transcriptDataFromLocalStorage,
+        mediaUrl: videoUrl,
+        title,
+        sttType: 'draftjs',
+        ...videoConfig
+      });
+    } else {
+      setVideoConfig({
+        transcriptData: transcriptDataJson,
+        mediaUrl: videoUrl,
+        title,
+        sttType: "bbckaldi",
+      });
+    }
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <TranscriptionEditor
+        transcriptData={videoConfig.transcriptData}
+        fileName={videoConfig.fileName}
+        mediaUrl={videoConfig.mediaUrl}
+        isEditable={videoConfig.isTextEditable}
+        spellCheck={videoConfig.spellCheck}
+        sttJsonType={videoConfig.sttType}
+        handleAnalyticsEvents={videoConfig.handleAnalyticsEvents}
+        title={videoConfig.title}
+        ref={videoConfig.transcriptEditorRef}
+        handleAutoSaveChanges={videoConfig.handleAutoSaveChanges}
+        autoSaveContentType={videoConfig.autoSaveContentType}
+        mediaType={ 'video' }
+      />
+          <section style={{ height: "250px", width: "50%", float: "left" }}>
+          <h3>Components Analytics</h3>
+          <textarea
+            style={{ height: "100%", width: "100%" }}
+            value={JSON.stringify(videoConfig.analyticsEvents, null, 2)}
+            disabled
+          />
+        </section>
+
+        <section style={{ height: "250px", width: "50%", float: "right" }}>
+          <h3>
+            Auto Save data:{" "}
+            <code>
+              {videoConfig.autoSaveContentType}| {videoConfig.autoSaveExtension}
+            </code>
+          </h3>
+          <textarea
+            style={{ height: "100%", width: "100%" }}
+            value={
+              videoConfig.autoSaveExtension === "json"
+                ? JSON.stringify(videoConfig.autoSaveData, null, 2)
+                : videoConfig.autoSaveData
+            }
+            disabled
+          />
+        </section>
     </div>
   );
-}
+};
 
 export default App;
