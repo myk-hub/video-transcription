@@ -4,7 +4,6 @@ import { TranscriptEditor as Editor } from 'react-transcript-editor';
 import { styled } from '@mui/material/styles'
 import Checkbox from '@mui/material/Checkbox';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import CssBaseline from '@mui/material/CssBaseline';
 import { RemoveCircleOutline } from '@mui/icons-material';
 
 // import TranscriptionEditor from './components/TranscriptionEditor';
@@ -75,6 +74,7 @@ const TranscriptionEditor = () => {
         transcriptData: transcriptDataFromLocalStorage,
         mediaUrl: videoUrl,
         title,
+        isTextEditable: true,
         sttType: 'draftjs',
       });
     } else {
@@ -92,8 +92,8 @@ const TranscriptionEditor = () => {
   };
 
   // https://stackoverflow.com/questions/8885701/play-local-hard-drive-video-file-with-html5-video-tag
-  const handleLoadMedia = files => {
-    const file = files[0];
+  const handleLoadMedia = e => {
+    const file = e.target.files[0];
     const videoNode = document.createElement("video");
     const canPlay = videoNode.canPlayType(file.type);
 
@@ -102,7 +102,6 @@ const TranscriptionEditor = () => {
       setVideoConfig({
         mediaUrl: fileURL,
         fileName: file.name,
-        ...videoConfig
       });
     } else {
       alert("Select a valid audio or video file.");
@@ -115,7 +114,6 @@ const TranscriptionEditor = () => {
     setVideoConfig({
       // transcriptData: DEMO_TRANSCRIPT,
       mediaUrl: fileURL,
-      ...videoConfig
     });
   };
 
@@ -239,7 +237,7 @@ const TranscriptionEditor = () => {
         <Button
           type={"file"}
           id={"mediaFile"}
-          onChange={(e) => handleLoadMedia(e.target.files)}
+          onChange={handleLoadMedia}
           component="label" variant="contained" startIcon={<CloudUploadIcon />}
         >
           From Computer
