@@ -1,24 +1,30 @@
 import React from 'react';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import FormControl from '@mui/material/FormControl';
 
-const SttTypeSelect = props => {
-  return <select className={ props.className } name={ props.name } value={ props.value } onChange={ props.handleChange }>
-    <option value="bbckaldi">BBC Kaldi</option>
-    <option value="draftjs">Draft Js</option>
-    <option value="gentle-transcript" disabled>Gentle Transcript</option>
-    <option value="gentle-alignement" disabled>Gentle Alignement</option>
-    <option value="iiif" disabled>IIIF</option>
-    <option value="autoedit2">autoEdit 2</option>
-    <option value="speechmatics">Speechmatics</option>
-    <option value="ibm">IBM Watson STT</option>
-    <option value="assemblyai" disabled>AssemblyAI</option>
-    <option value="rev" disabled>Rev</option>
-    <option value="srt" disabled>Srt</option>
-    <option value="vtt" disabled>VTT</option>
-    <option value="vtt-youtube" disabled>Youtube VTT</option>
-    <option value="amazontranscribe">Amazon Transcribe</option>
-    <option value="digitalpaperedit">Digital Paper Edit</option>
-    <option value="google-stt">Google STT</option>
-  </select>;
-};
+
+const SttTypeSelect = props => (
+  <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+    <Select className={props.className} name={props.name} value={props.value} onChange={props.handleChange}>
+      <MenuItem value="bbckaldi">BBC Kaldi</MenuItem>
+      <MenuItem value="draftjs">Draft Js</MenuItem>
+      <MenuItem value="gentle-transcript" disabled>Gentle Transcript</MenuItem>
+      <MenuItem value="gentle-alignement" disabled>Gentle Alignement</MenuItem>
+      <MenuItem value="iiif" disabled>IIIF</MenuItem>
+      <MenuItem value="autoedit2">autoEdit 2</MenuItem>
+      <MenuItem value="speechmatics">Speechmatics</MenuItem>
+      <MenuItem value="ibm">IBM Watson STT</MenuItem>
+      <MenuItem value="assemblyai" disabled>AssemblyAI</MenuItem>
+      <MenuItem value="rev" disabled>Rev</MenuItem>
+      <MenuItem value="srt" disabled>Srt</MenuItem>
+      <MenuItem value="vtt" disabled>VTT</MenuItem>
+      <MenuItem value="vtt-youtube" disabled>Youtube VTT</MenuItem>
+      <MenuItem value="amazontranscribe">Amazon Transcribe</MenuItem>
+      <MenuItem value="digitalpaperedit">Digital Paper Edit</MenuItem>
+      <MenuItem value="google-stt">Google STT</MenuItem>
+    </Select>
+  </FormControl>
+);
 
 export default SttTypeSelect;
