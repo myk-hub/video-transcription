@@ -76,6 +76,7 @@ const TranscriptionEditor = () => {
         title,
         isTextEditable: true,
         sttType: 'draftjs',
+        exportFormat: "draftjs"
       });
     } else {
       setVideoConfig({
@@ -86,14 +87,14 @@ const TranscriptionEditor = () => {
         isTextEditable: true,
         spellCheck: false,
         autoSaveContentType: "draftjs",
-        exportFormat: "draftjs"
+        exportFormat: "draftjs",
       });
     }
   };
 
   // https://stackoverflow.com/questions/8885701/play-local-hard-drive-video-file-with-html5-video-tag
-  const handleLoadMedia = e => {
-    const file = e.target.files[0];
+  const handleLoadMedia = files => {
+    const file = files[0];
     const videoNode = document.createElement("video");
     const canPlay = videoNode.canPlayType(file.type);
 
@@ -237,7 +238,7 @@ const TranscriptionEditor = () => {
         <Button
           type={"file"}
           id={"mediaFile"}
-          onChange={handleLoadMedia}
+          onChange={(e) => handleLoadMedia(e.target.files)}
           component="label" variant="contained" startIcon={<CloudUploadIcon />}
         >
           From Computer
